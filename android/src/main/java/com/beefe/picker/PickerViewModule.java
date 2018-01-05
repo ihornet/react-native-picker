@@ -92,6 +92,7 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
 
     private static final String PICKER_CONFIRM_BTN_TEXT = "pickerConfirmBtnText";
     private static final String PICKER_CONFIRM_BTN_COLOR = "pickerConfirmBtnColor";
+    private static final String PICKER_DIVIDER_COLOR = "pickerDividerColor";
 
     private static final String PICKER_CANCEL_BTN_TEXT = "pickerCancelBtnText";
     private static final String PICKER_CANCEL_BTN_COLOR = "pickerCancelBtnColor";
@@ -145,6 +146,7 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
             TextView cancelTV = (TextView) view.findViewById(R.id.cancel);
             TextView titleTV = (TextView) view.findViewById(R.id.title);
             TextView confirmTV = (TextView) view.findViewById(R.id.confirm);
+            View dividerView = view.findViewById(R.id.dividerView);
             RelativeLayout pickerLayout = (RelativeLayout) view.findViewById(R.id.pickerLayout);
             pickerViewLinkage = (PickerViewLinkage) view.findViewById(R.id.pickerViewLinkage);
             pickerViewAlone = (PickerViewAlone) view.findViewById(R.id.pickerViewAlone);
@@ -187,6 +189,13 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
                 int[] colors = getColor(array);
                 confirmTV.setTextColor(argb(colors[3], colors[0], colors[1], colors[2]));
             }
+
+            if (options.hasKey(PICKER_DIVIDER_COLOR)) {
+                ReadableArray array = options.getArray(PICKER_DIVIDER_COLOR);
+                int[] colors = getColor(array);
+                dividerView.setBackgroundColor(argb(colors[3], colors[0], colors[1], colors[2]));
+            }
+
             confirmTV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -358,13 +367,16 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
                 }else {
                     //layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
                 }
-                layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                 layoutParams.format = PixelFormat.TRANSPARENT;
                 layoutParams.windowAnimations = R.style.PickerAnim;
                 layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
                 layoutParams.height = height;
                 layoutParams.gravity = Gravity.BOTTOM;
+                layoutParams.dimAmount = 0.2f;
                 window.setAttributes(layoutParams);
+                window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+                window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                dialog.setCanceledOnTouchOutside(true);
             }
         }
     }

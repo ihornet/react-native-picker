@@ -36,6 +36,14 @@
 
     </RelativeLayout>
 
+    <View
+        android:id="@+id/dividerView"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="#e2e2e2"
+        android:layout_below="@id/barLayout"
+        />
+
     <RelativeLayout
         android:id="@+id/pickerLayout"
         android:layout_width="match_parent"
