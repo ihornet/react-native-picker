@@ -11,7 +11,7 @@
 #import <React/RCTEventDispatcher.h>
 
 @interface RCTBEEPickerManager()
-
+@property(nonatomic, strong) UIView *maskView;
 @property(nonatomic,strong)BzwPicker *pick;
 @property(nonatomic,assign)float height;
 @property(nonatomic,weak)UIWindow * window;
@@ -81,16 +81,25 @@ RCT_EXPORT_METHOD(_init:(NSDictionary *)indic){
     
     self.pick=[[BzwPicker alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, self.height) dic:dataDic leftStr:pickerCancelBtnText centerStr:pickerTitleText rightStr:pickerConfirmBtnText topbgColor:pickerToolBarBg bottombgColor:pickerBg leftbtnbgColor:pickerCancelBtnColor rightbtnbgColor:pickerConfirmBtnColor centerbtnColor:pickerTitleColor selectValueArry:selectArry weightArry:weightArry pickerToolBarFontSize:pickerToolBarFontSize pickerFontSize:pickerFontSize pickerFontColor:pickerFontColor  pickerRowHeight: pickerRowHeight];
     
+    if(!_maskView) {
+        _maskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        _maskView.backgroundColor = UIColor.lightGrayColor;
+        _maskView.alpha = 0.2;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
+        [_maskView addGestureRecognizer:tap];
+    }
+    
+    self.pick.maskView = _maskView;
+    
     _pick.bolock=^(NSDictionary *backinfoArry){
 
         dispatch_async(dispatch_get_main_queue(), ^{
-
             [self.bridge.eventDispatcher sendAppEventWithName:@"pickerEvent" body:backinfoArry];
         });
     };
 
     dispatch_async(dispatch_get_main_queue(), ^{
-
+        [self.window addSubview:_maskView];
         [self.window addSubview:_pick];
     });
 
@@ -117,7 +126,14 @@ RCT_EXPORT_METHOD(hide){
                 [_pick setFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, self.height)];
             }];
         });
-    }return;
+    }
+    if(_maskView) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_maskView removeFromSuperview];
+        });
+    }
+    
+    return;
 }
 
 RCT_EXPORT_METHOD(select: (NSArray*)data){
