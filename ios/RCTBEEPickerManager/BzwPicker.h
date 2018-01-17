@@ -17,6 +17,7 @@ typedef void(^backBolock)(NSDictionary * );
 @interface BzwPicker : UIView<UIPickerViewDataSource,UIPickerViewDelegate>
 
 @property (strong,nonatomic)UIPickerView *pick;
+@property (strong,nonatomic)UIView *maskView;
 
 @property(nonatomic,copy)backBolock bolock;
 
