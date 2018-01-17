@@ -31,6 +31,7 @@
         self.pickerFontSize=pickerFontSize;
         self.pickerFontColor=pickerFontColor;
         self.pickerRowHeight=pickerRowHeight;
+        self.userInteractionEnabled = true;
         [self getStyle];
         [self getnumStyle];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -44,6 +45,7 @@
 {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 40)];
     view.backgroundColor = [UIColor cyanColor];
+    view.layer.borderColor = UIColor.grayColor.CGColor;
     
     [self addSubview:view];
     
@@ -58,7 +60,12 @@
     
     [view addSubview:self.leftBtn];
     
-    view.backgroundColor=[self colorWith:topbgColor];
+    UIView *seperatorView = [[UIView alloc] initWithFrame:CGRectMake(0, 39, self.frame.size.width, 0.5)];
+    seperatorView.backgroundColor = UIColor.lightGrayColor;
+    [view addSubview:seperatorView];
+    
+    // view.backgroundColor=[self colorWith:topbgColor];
+    view.backgroundColor=UIColor.whiteColor;
     
     self.rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.rightBtn.frame = CGRectMake(view.frame.size.width-100,5, 90, 30);
@@ -89,7 +96,8 @@
     self.pick.showsSelectionIndicator=YES;
     [self addSubview:self.pick];
     
-    self.pick.backgroundColor=[self colorWith:bottombgColor];
+   // self.pick.backgroundColor=[self colorWith:bottombgColor];
+    self.pick.backgroundColor = UIColor.whiteColor;
 }
 //返回显示的列数
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -611,6 +619,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:.2f animations:^{
             
+            if(_maskView) { [_maskView removeFromSuperview]; }
+            
             [self setFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 250)];
             
         }];
@@ -648,7 +658,7 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:.2f animations:^{
-            
+            if(_maskView) { [_maskView removeFromSuperview];}
             [self setFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 250)];
         }];
     });
@@ -948,7 +958,8 @@
     if (lbl == nil) {
         lbl = [[UILabel alloc]init];
         //在这里设置字体相关属性
-        lbl.font = [UIFont systemFontOfSize:[_pickerFontSize integerValue]];
+        //lbl.font = [UIFont systemFontOfSize:[_pickerFontSize integerValue]];
+        lbl.font = [UIFont systemFontOfSize:25];
         lbl.textColor = [self colorWith:_pickerFontColor];
         lbl.textAlignment = UITextAlignmentCenter;
     }
